@@ -41,12 +41,12 @@
 
 .card.flipped .cardInner {
   transform: rotateY(180deg);
-  animation: flip 1s linear forwards;
+  animation: flip 0.5s linear forwards;
 }
 
 .card.flipped .cardInner * {
   opacity: 0;
-  animation: flipShowContent 1s linear forwards;
+  animation: flipShowContent 0.5s linear forwards;
 }
 
 .card.found .cardInner {

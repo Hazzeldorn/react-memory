@@ -2,17 +2,16 @@ import React from "react";
 
 import styles from "./MemoryCard.module.css";
 
-function MemoryCard({ isVisible, isFound, onClick, children }) {
-  const CARD_STATES = {
-    DEFAULT: "default",
-    FLIPPED: "flipped",
-    FOUND: "found",
+function MemoryCard({ card, onClick, isFlipped, isFound }) {
+  const handleClick = () => {
+    if (!isFlipped && !isFound) {
+      onClick(card);
+    }
   };
 
-  // set card class name by state
   let cardClassName = `${styles.card}`;
 
-  if (isVisible) {
+  if (isFlipped) {
     cardClassName += ` ${styles.flipped}`;
   } else if (isFound) {
     cardClassName += ` ${styles.found}`;
@@ -21,9 +20,9 @@ function MemoryCard({ isVisible, isFound, onClick, children }) {
   }
 
   return (
-    <button onClick={onClick} className={cardClassName}>
+    <button onClick={handleClick} className={cardClassName}>
       <div className={styles.cardInner}>
-        {isVisible || isFound ? children : ""}
+        {isFlipped || isFound ? <span>{card.icon}</span> : ""}
       </div>
     </button>
   );
