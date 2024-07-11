@@ -7,9 +7,8 @@ import { formattedClock } from "../../utils";
 import { MemoryGameStateContext } from "./../MemoryGameStateProvider";
 
 function MemoryGameControls() {
-  const { isPlaying, setIsPlaying, createGame } = React.useContext(
-    MemoryGameStateContext
-  );
+  const { isPlaying, setIsPlaying, createGame, moveCount, setMoveCount } =
+    React.useContext(MemoryGameStateContext);
 
   const timer = useTimer();
 
@@ -30,11 +29,13 @@ function MemoryGameControls() {
   function handleReset() {
     timer.reset();
     setIsPlaying(false);
+    setMoveCount(0);
     createGame();
   }
 
   return (
     <div className={styles.gamecontrols}>
+      <span className={styles.movecount}>Moves: {moveCount}</span>
       <span className={styles.timer}>{formattedTimer}</span>
       <button className={styles.reset__btn} onClick={handleReset}>
         Reset

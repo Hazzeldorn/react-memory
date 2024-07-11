@@ -2,7 +2,7 @@
   "name": "react-memory",
   "version": "0.1.0",
   "private": true,
-  "author": "Jonas Hadorn",
+  "author": "Hazzeldorn",
   "devDependencies": {
     "parcel": "^2.12.0"
   },

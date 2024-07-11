@@ -5,7 +5,10 @@ import styles from "./Footer.module.css";
 function Footer() {
   return (
     <footer className={styles.wrapper}>
-      <p>© 2024-present Jonas Hadorn. All rights reserved.</p>
+      <p>
+        This game has been programmed for practice purposes only and may not yet
+        be complete or error-free.
+      </p>
     </footer>
   );
 }

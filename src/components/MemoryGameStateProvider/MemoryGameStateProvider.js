@@ -8,6 +8,7 @@ const NUM_COLS = 5;
 
 function MemoryGameStateProvider({ children }) {
   const [isPlaying, setIsPlaying] = React.useState(false);
+  const [moveCount, setMoveCount] = React.useState(0);
   const [cards, setCards] = React.useState([]);
   const [foundCards, setFoundCards] = React.useState([]);
   const [flippedCards, setFlippedCards] = React.useState([]);
@@ -24,6 +25,8 @@ function MemoryGameStateProvider({ children }) {
       value={{
         isPlaying,
         setIsPlaying,
+        moveCount,
+        setMoveCount,
         cards,
         foundCards,
         setFoundCards,

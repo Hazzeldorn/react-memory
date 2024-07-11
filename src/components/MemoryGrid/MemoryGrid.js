@@ -9,6 +9,7 @@ function MemoryGrid() {
     setIsPlaying,
     cards,
     foundCards,
+    setMoveCount,
     setFoundCards,
     flippedCards,
     setFlippedCards,
@@ -60,13 +61,18 @@ function MemoryGrid() {
   }, [foundCards, isPlaying, setIsPlaying, numRows, numCols]);
 
   function handleCardClick(card) {
+    // only allow two flipped cards at a time
     if (flippedCards.length < 2 && !flippedCards.includes(card)) {
       setFlippedCards((prevFlippedCards) => [...prevFlippedCards, card]);
     }
 
+    // start the game if it's not already started
     if (!isPlaying) {
       setIsPlaying(true);
     }
+
+    // increment move count
+    setMoveCount((count) => count + 1);
   }
 
   return (
