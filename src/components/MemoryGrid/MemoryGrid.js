@@ -51,11 +51,12 @@ function MemoryGrid() {
     }
 
     // ...otherwise flip the card
-    setFlippedCards([...flippedCards, index]);
+    const nextFlippedCards = [...flippedCards, index];
+    setFlippedCards(nextFlippedCards);
 
     // if two cards are flipped, check if they match
-    if (flippedCards.length === 2) {
-      const [firstCardIndex, secondCardIndex] = flippedCards;
+    if (nextFlippedCards.length === 2) {
+      const [firstCardIndex, secondCardIndex] = nextFlippedCards;
       if (cardIcons[firstCardIndex] === cardIcons[secondCardIndex]) {
         console.log("Match!");
         setFoundCards([...foundCards, firstCardIndex, secondCardIndex]);
@@ -63,7 +64,10 @@ function MemoryGrid() {
         console.log("No match!");
       }
 
-      setFlippedCards([]);
+      // reset the flipped cards after a short delay
+      setTimeout(() => {
+        setFlippedCards([]);
+      }, 1000);
     }
   }
 
