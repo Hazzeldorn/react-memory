@@ -1,49 +1,30 @@
 import React from "react";
 import MemoryCard from "../MemoryCard/MemoryCard";
-
 import styles from "./MemoryGrid.module.css";
+import { MemoryGameStateContext } from "./../MemoryGameStateProvider";
 
-import { MEMORY_CARD_ICONS } from "../../data";
-import { sampleMulti, arrayShuffle } from "../../utils";
-
-const NUM_ROWS = 2;
-const NUM_COLS = 3;
-
-// Validation
-const validateGrid = (rows, cols) => {
-  if (rows < 2 || cols < 2) throw new Error("Grid is too small");
-  if (rows * cols > MEMORY_CARD_ICONS.length * 2)
-    throw new Error("Grid is too big");
-  if ((rows * cols) % 2 !== 0) throw new Error("Number of cards must be even");
-};
-
-validateGrid(NUM_ROWS, NUM_COLS);
-
-function MemoryGrid({ isPlaying, setIsPlaying }) {
-  const [cards, setCards] = React.useState([]);
-  const [flippedCards, setFlippedCards] = React.useState([]);
-  const [foundCards, setFoundCards] = React.useState([]);
+function MemoryGrid() {
+  const {
+    isPlaying,
+    setIsPlaying,
+    cards,
+    foundCards,
+    setFoundCards,
+    flippedCards,
+    setFlippedCards,
+    createGame,
+    numCols,
+    numRows,
+  } = React.useContext(MemoryGameStateContext);
 
   const dynamicGridStyle = {
-    gridTemplateColumns: `repeat(${NUM_COLS}, 1fr)`,
-    gridTemplateRows: `repeat(${NUM_ROWS}, 1fr)`,
+    gridTemplateColumns: `repeat(${numCols}, 1fr)`,
+    gridTemplateRows: `repeat(${numRows}, 1fr)`,
   };
 
-  // generate and memoize the initial cards
-  const initialCards = React.useMemo(() => {
-    let iconList = [];
-    sampleMulti(MEMORY_CARD_ICONS, (NUM_ROWS * NUM_COLS) / 2).forEach(
-      (icon, index) => {
-        iconList.push({ groupId: index, icon });
-        iconList.push({ groupId: index, icon });
-      }
-    );
-    return arrayShuffle(iconList);
-  }, []);
-
   React.useEffect(() => {
-    setCards(arrayShuffle(initialCards));
-  }, [initialCards]);
+    createGame();
+  }, [createGame]);
 
   // check matches outside of react render cycle
   const timeoutRef = React.useRef(null);
@@ -52,7 +33,7 @@ function MemoryGrid({ isPlaying, setIsPlaying }) {
       const [firstCard, secondCard] = flippedCards;
 
       if (firstCard.groupId === secondCard.groupId) {
-        timeoutRef.current = setTimeout(() => {
+        timeoutRef.current = window.setTimeout(() => {
           setFoundCards((prevFoundCards) => [
             ...prevFoundCards,
             firstCard,
@@ -61,22 +42,22 @@ function MemoryGrid({ isPlaying, setIsPlaying }) {
           setFlippedCards([]);
         }, 300);
       } else {
-        timeoutRef.current = setTimeout(() => {
+        timeoutRef.current = window.setTimeout(() => {
           setFlippedCards([]);
         }, 800);
       }
     }
 
-    return () => clearTimeout(timeoutRef.current);
-  }, [flippedCards]);
+    return () => window.clearTimeout(timeoutRef.current);
+  }, [flippedCards, setFoundCards, setFlippedCards]);
 
   // check if all cards are found
   React.useEffect(() => {
-    if (isPlaying && foundCards.length === NUM_ROWS * NUM_COLS) {
-      alert("Congratulations!");
+    if (isPlaying && foundCards.length === numRows * numCols) {
       setIsPlaying(false);
+      alert("Congratulations!");
     }
-  }, [foundCards, isPlaying, setIsPlaying]);
+  }, [foundCards, isPlaying, setIsPlaying, numRows, numCols]);
 
   function handleCardClick(card) {
     if (flippedCards.length < 2 && !flippedCards.includes(card)) {

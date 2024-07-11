@@ -4,7 +4,13 @@ import styles from "./MemoryGameControls.module.css";
 import useTimer from "../../hooks/use-timer";
 import { formattedClock } from "../../utils";
 
-function MemoryGameControls({ isPlaying, resetGame }) {
+import { MemoryGameStateContext } from "./../MemoryGameStateProvider";
+
+function MemoryGameControls() {
+  const { isPlaying, setIsPlaying, createGame } = React.useContext(
+    MemoryGameStateContext
+  );
+
   const timer = useTimer();
 
   // Start or stop the timer based on isPlaying
@@ -23,14 +29,15 @@ function MemoryGameControls({ isPlaying, resetGame }) {
 
   function handleReset() {
     timer.reset();
-    resetGame();
+    setIsPlaying(false);
+    createGame();
   }
 
   return (
     <div className={styles.gamecontrols}>
       <span className={styles.timer}>{formattedTimer}</span>
       <button className={styles.reset__btn} onClick={handleReset}>
-        Reset Game (TODO)
+        Reset
       </button>
     </div>
   );
