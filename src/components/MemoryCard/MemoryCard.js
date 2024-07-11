@@ -9,20 +9,24 @@ function MemoryCard({ card, onClick, isFlipped, isFound }) {
     }
   };
 
-  let cardClassName = `${styles.card}`;
+  // define styles based on card state
+  let cardClassName = styles.card;
 
   if (isFlipped) {
-    cardClassName += ` ${styles.flipped}`;
+    cardClassName += ` ${styles["card--flipped"]}`;
   } else if (isFound) {
-    cardClassName += ` ${styles.found}`;
+    cardClassName += ` ${styles["card--found"]}`;
   } else {
-    cardClassName += ` ${styles.default}`;
+    cardClassName += ` ${styles["card--default"]}`;
   }
 
   return (
     <button onClick={handleClick} className={cardClassName}>
-      <div className={styles.cardInner}>
-        {isFlipped || isFound ? <span>{card.icon}</span> : ""}
+      <div className={styles.card__inner}>
+        <div className={styles.card__front}></div>
+        <div className={styles.card__back}>
+          {isFlipped || isFound ? <span>{card.icon}</span> : ""}
+        </div>
       </div>
     </button>
   );
