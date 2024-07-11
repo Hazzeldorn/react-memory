@@ -1,41 +1,13 @@
 import React from "react";
+import MemoryCard from "../MemoryCard/MemoryCard";
 
 import styles from "./MemoryGrid.module.css";
 
-import MemoryCard from "../MemoryCard/MemoryCard";
+import { MEMORY_CARD_ICONS } from "../../data";
 
 function MemoryGrid() {
-  const NUM_ROWS = 4;
+  const NUM_ROWS = 3;
   const NUM_COLS = 4;
-
-  const CARD_CONTENTS = [
-    "🍉",
-    "🍌",
-    "🍏",
-    "🍒",
-    "🌶️",
-    "🍓",
-    "🥝",
-    "🫐",
-    "🍑",
-    "🥕",
-    "🍆",
-    "🍇",
-    "🍍",
-    "🍊",
-    "🍋",
-    "🥥",
-    "🥭",
-    "🍎",
-    "🍈",
-    "🥑",
-    "🥦",
-    "🍄",
-    "🥬",
-    "🌽",
-    "🫑",
-    "🥔",
-  ];
 
   // guard clause - make sure the grid is not too small
   if (NUM_ROWS < 2 || NUM_COLS < 2) {
@@ -43,7 +15,7 @@ function MemoryGrid() {
   }
 
   // guard clause - make sure the grid is not too big
-  if (NUM_ROWS * NUM_COLS > CARD_CONTENTS.length * 2) {
+  if (NUM_ROWS * NUM_COLS > MEMORY_CARD_ICONS.length * 2) {
     throw new Error("Grid is too big");
   }
 
@@ -58,7 +30,7 @@ function MemoryGrid() {
   };
 
   // randomly pick icons for the cards
-  const selectedItems = CARD_CONTENTS.sort(() => Math.random() - 0.5).slice(
+  const selectedItems = MEMORY_CARD_ICONS.sort(() => Math.random() - 0.5).slice(
     0,
     (NUM_ROWS * NUM_COLS) / 2
   );
@@ -68,11 +40,43 @@ function MemoryGrid() {
     () => Math.random() - 0.5
   );
 
+  const [cardIcons, setCardIcons] = React.useState(shuffledItems);
+  const [flippedCards, setFlippedCards] = React.useState([]);
+  const [foundCards, setFoundCards] = React.useState([]);
+
+  function handleClick(index) {
+    // if the card is already flipped or found, return
+    if (flippedCards.includes(index) || foundCards.includes(index)) {
+      return;
+    }
+
+    // ...otherwise flip the card
+    setFlippedCards([...flippedCards, index]);
+
+    // if two cards are flipped, check if they match
+    if (flippedCards.length === 2) {
+      const [firstCardIndex, secondCardIndex] = flippedCards;
+      if (cardIcons[firstCardIndex] === cardIcons[secondCardIndex]) {
+        console.log("Match!");
+        setFoundCards([...foundCards, firstCardIndex, secondCardIndex]);
+      } else {
+        console.log("No match!");
+      }
+
+      setFlippedCards([]);
+    }
+  }
+
   return (
     <div className={styles.grid} style={dynamicGridStyle}>
       {Array.from({ length: NUM_ROWS * NUM_COLS }).map((_, cardIndex) => (
-        <MemoryCard key={cardIndex}>
-          <span>{shuffledItems[cardIndex]}</span>
+        <MemoryCard
+          key={cardIndex}
+          onClick={() => handleClick(cardIndex)}
+          isVisible={flippedCards.includes(cardIndex)}
+          isFound={foundCards.includes(cardIndex)}
+        >
+          <span>{cardIcons[cardIndex]}</span>
         </MemoryCard>
       ))}
     </div>

@@ -2,8 +2,14 @@ import React from "react";
 
 import styles from "./MemoryCard.module.css";
 
-function MemoryCard({ children }) {
-  return <div className={styles.card}>{children}</div>;
+function MemoryCard({ isVisible, isFound, onClick, children }) {
+  const cardClassName = `${styles.card} ${isFound ? styles.found : ""}`;
+
+  return (
+    <div onClick={onClick} className={cardClassName}>
+      {isVisible || isFound ? children : <span>?</span>}
+    </div>
+  );
 }
 
 export default MemoryCard;

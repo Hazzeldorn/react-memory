@@ -10,3 +10,7 @@
 
   cursor: pointer;
 }
+
+.card.found {
+  background: lightgreen;
+}
