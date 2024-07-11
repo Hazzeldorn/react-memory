@@ -6,8 +6,8 @@ import styles from "./MemoryGrid.module.css";
 import { MEMORY_CARD_ICONS } from "../../data";
 import { sampleMulti, arrayShuffle } from "../../utils";
 
-const NUM_ROWS = 3;
-const NUM_COLS = 4;
+const NUM_ROWS = 2;
+const NUM_COLS = 3;
 
 // Validation
 const validateGrid = (rows, cols) => {
@@ -19,7 +19,7 @@ const validateGrid = (rows, cols) => {
 
 validateGrid(NUM_ROWS, NUM_COLS);
 
-function MemoryGrid() {
+function MemoryGrid({ isPlaying, setIsPlaying }) {
   const [cards, setCards] = React.useState([]);
   const [flippedCards, setFlippedCards] = React.useState([]);
   const [foundCards, setFoundCards] = React.useState([]);
@@ -70,9 +70,21 @@ function MemoryGrid() {
     return () => clearTimeout(timeoutRef.current);
   }, [flippedCards]);
 
+  // check if all cards are found
+  React.useEffect(() => {
+    if (isPlaying && foundCards.length === NUM_ROWS * NUM_COLS) {
+      alert("Congratulations!");
+      setIsPlaying(false);
+    }
+  }, [foundCards, isPlaying, setIsPlaying]);
+
   function handleCardClick(card) {
     if (flippedCards.length < 2 && !flippedCards.includes(card)) {
       setFlippedCards((prevFlippedCards) => [...prevFlippedCards, card]);
+    }
+
+    if (!isPlaying) {
+      setIsPlaying(true);
     }
   }
 

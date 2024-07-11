@@ -50,3 +50,17 @@ export const range = (start, end, step = 1) => {
   }
   return output;
 };
+
+/**
+ * Formats the given time in seconds to a string with minutes and seconds.
+ * @param {number} elapsedTime - The time in seconds.
+ * @returns {string} - The formatted time string.
+ */
+export const formattedClock = (elapsedTime) => {
+  const minutes = Math.floor(elapsedTime / 60);
+  const seconds = elapsedTime % 60;
+
+  return `${minutes.toString().padStart(2, "0")}:${seconds
+    .toString()
+    .padStart(2, "0")}`;
+};
