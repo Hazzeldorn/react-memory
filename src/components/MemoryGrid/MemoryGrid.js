@@ -148,8 +148,8 @@ function MemoryGrid() {
         ariaHideApp={false}
       >
         <div className={styles.modal__inner}>
-          <h2>Congratulations!</h2>
-          <p>You've found all the pairs!</p>
+          <h2>Congratulations, you've found all the pairs!</h2>
+          <p>Remember to eat some fruit and vegetables every day 😇</p>
           <button onClick={() => setModalIsOpen(false)}>Close</button>
         </div>
       </Modal>
