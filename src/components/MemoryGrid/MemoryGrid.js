@@ -2,8 +2,25 @@ import React from "react";
 import MemoryCard from "../MemoryCard/MemoryCard";
 import styles from "./MemoryGrid.module.css";
 import { MemoryGameStateContext } from "./../MemoryGameStateProvider";
+import Modal from "react-modal";
 
 // TODO: needs refactoring
+
+const customStyles = {
+  overlay: {
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+    background: "#eee",
+    padding: "2em",
+  },
+};
 
 function MemoryGrid() {
   const {
@@ -20,6 +37,7 @@ function MemoryGrid() {
     numRows,
   } = React.useContext(MemoryGameStateContext);
   const cardRefs = React.useRef([]);
+  const [modalIsOpen, setModalIsOpen] = React.useState(false);
 
   React.useEffect(() => {
     // Initialize the cardRefs array with the correct number of references
@@ -66,7 +84,7 @@ function MemoryGrid() {
       setIsPlaying(false);
       setTimeout(() => {
         // wait for the last card to show its pop animation
-        alert("Congratulations!");
+        setModalIsOpen(true);
       }, 500);
     }
   }, [foundCards, isPlaying, setIsPlaying, numRows, numCols]);
@@ -92,20 +110,18 @@ function MemoryGrid() {
 
     // if not an arrow key, return early
     if (
-      event.key !== "ArrowRight" &&
-      event.key !== "ArrowUp" &&
-      event.key !== "ArrowLeft" &&
-      event.key !== "ArrowDown"
+      cardIndex === -1 ||
+      (event.key !== "ArrowRight" &&
+        event.key !== "ArrowUp" &&
+        event.key !== "ArrowLeft" &&
+        event.key !== "ArrowDown")
     ) {
       return;
     }
 
     event.preventDefault();
 
-    if (focusedElement === document.body) {
-      // No card is focused, focus on the first card
-      cardRefs.current[0].focus();
-    } else if (event.key === "ArrowRight") {
+    if (event.key === "ArrowRight") {
       const nextIndex = (cardIndex + 1) % cards.length;
       cardRefs.current[nextIndex].focus();
     } else if (event.key === "ArrowUp") {
@@ -123,22 +139,38 @@ function MemoryGrid() {
   }
 
   return (
-    <div
-      className={styles.grid}
-      style={dynamicGridStyle}
-      onKeyDown={handleKeyDown}
-    >
-      {cards.map((card, index) => (
-        <MemoryCard
-          key={index}
-          card={card}
-          onClick={handleCardClick}
-          isFlipped={flippedCards.includes(card)}
-          isFound={foundCards.includes(card)}
-          ref={(el) => (cardRefs.current[index] = el)}
-        />
-      ))}
-    </div>
+    <>
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={() => setModalIsOpen(false)}
+        style={customStyles}
+        contentLabel="Success Modal"
+        ariaHideApp={false}
+      >
+        <div className={styles.modal__inner}>
+          <h2>Congratulations!</h2>
+          <p>You've found all the pairs!</p>
+          <button onClick={() => setModalIsOpen(false)}>Close</button>
+        </div>
+      </Modal>
+
+      <div
+        className={styles.grid}
+        style={dynamicGridStyle}
+        onKeyDown={handleKeyDown}
+      >
+        {cards.map((card, index) => (
+          <MemoryCard
+            key={index}
+            card={card}
+            onClick={handleCardClick}
+            isFlipped={flippedCards.includes(card)}
+            isFound={foundCards.includes(card)}
+            ref={(el) => (cardRefs.current[index] = el)}
+          />
+        ))}
+      </div>
+    </>
   );
 }
 

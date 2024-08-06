@@ -2,3 +2,19 @@
   display: grid;
   grid-gap: 1.25em;
 }
+
+.modal__inner {
+  text-align: center;
+  color: #212325;
+}
+
+.modal__inner button {
+  margin-top: 1.5em;
+  border: none;
+  padding: 0.5em 1em;
+  background-color: #4a81b9;
+  box-shadow: 1px 1px 5px 0px rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
+  transition: transform 0.25s;
+  cursor: pointer;
+}

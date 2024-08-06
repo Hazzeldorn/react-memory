@@ -88,7 +88,7 @@
 /* card interactions */
 
 .card:focus {
-  outline: 2px solid white;
+  outline: 2px solid #eee;
 }
 
 .card--default:hover .card__inner {
