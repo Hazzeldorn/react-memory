@@ -3,6 +3,8 @@ import { generateNewGame } from "../../game-helpers";
 
 export const MemoryGameStateContext = React.createContext();
 
+// NOTE: You can adjust the number of rows and columns here,
+// however, the design is currently just optimized for 4x5
 const NUM_ROWS = 4;
 const NUM_COLS = 5;
 

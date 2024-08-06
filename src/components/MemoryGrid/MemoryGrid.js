@@ -3,6 +3,8 @@ import MemoryCard from "../MemoryCard/MemoryCard";
 import styles from "./MemoryGrid.module.css";
 import { MemoryGameStateContext } from "./../MemoryGameStateProvider";
 
+// TODO: needs refactoring
+
 function MemoryGrid() {
   const {
     isPlaying,
@@ -17,6 +19,12 @@ function MemoryGrid() {
     numCols,
     numRows,
   } = React.useContext(MemoryGameStateContext);
+  const cardRefs = React.useRef([]);
+
+  React.useEffect(() => {
+    // Initialize the cardRefs array with the correct number of references
+    cardRefs.current = cardRefs.current.slice(0, cards.length);
+  }, [cards]);
 
   const dynamicGridStyle = {
     gridTemplateColumns: `repeat(${numCols}, 1fr)`,
@@ -56,7 +64,10 @@ function MemoryGrid() {
   React.useEffect(() => {
     if (isPlaying && foundCards.length === numRows * numCols) {
       setIsPlaying(false);
-      alert("Congratulations!");
+      setTimeout(() => {
+        // wait for the last card to show its pop animation
+        alert("Congratulations!");
+      }, 500);
     }
   }, [foundCards, isPlaying, setIsPlaying, numRows, numCols]);
 
@@ -75,8 +86,48 @@ function MemoryGrid() {
     setMoveCount((count) => count + 1);
   }
 
+  function handleKeyDown(event) {
+    const focusedElement = document.activeElement;
+    const cardIndex = cardRefs.current.indexOf(focusedElement);
+
+    // if not an arrow key, return early
+    if (
+      event.key !== "ArrowRight" &&
+      event.key !== "ArrowUp" &&
+      event.key !== "ArrowLeft" &&
+      event.key !== "ArrowDown"
+    ) {
+      return;
+    }
+
+    event.preventDefault();
+
+    if (focusedElement === document.body) {
+      // No card is focused, focus on the first card
+      cardRefs.current[0].focus();
+    } else if (event.key === "ArrowRight") {
+      const nextIndex = (cardIndex + 1) % cards.length;
+      cardRefs.current[nextIndex].focus();
+    } else if (event.key === "ArrowUp") {
+      const aboveIndex =
+        cardIndex - numCols >= 0 ? cardIndex - numCols : cardIndex;
+      cardRefs.current[aboveIndex].focus();
+    } else if (event.key === "ArrowLeft") {
+      const nextIndex = (cardIndex - 1 + cards.length) % cards.length;
+      cardRefs.current[nextIndex].focus();
+    } else if (event.key === "ArrowDown") {
+      const belowIndex =
+        cardIndex + numCols < cards.length ? cardIndex + numCols : cardIndex;
+      cardRefs.current[belowIndex].focus();
+    }
+  }
+
   return (
-    <div className={styles.grid} style={dynamicGridStyle}>
+    <div
+      className={styles.grid}
+      style={dynamicGridStyle}
+      onKeyDown={handleKeyDown}
+    >
       {cards.map((card, index) => (
         <MemoryCard
           key={index}
@@ -84,6 +135,7 @@ function MemoryGrid() {
           onClick={handleCardClick}
           isFlipped={flippedCards.includes(card)}
           isFound={foundCards.includes(card)}
+          ref={(el) => (cardRefs.current[index] = el)}
         />
       ))}
     </div>
