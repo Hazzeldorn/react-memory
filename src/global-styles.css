@@ -12,13 +12,16 @@
 }
 html,
 body {
-  height: 100%;
+  min-height: 100%;
 }
 body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
-  font-family: 'Lato', sans-serif;
-  background: lightgray
+  font-family: "Lato", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  color: #fafafa;
+  background: linear-gradient(0deg, rgba(33,35,37,1) 0%, rgba(41,44,47,1) 100%);
 }
 img,
 picture,

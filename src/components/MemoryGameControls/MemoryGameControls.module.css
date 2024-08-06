@@ -2,18 +2,21 @@
   width: 100%;
   display: flex;
   justify-content: space-between;
+  align-items: baseline;
+  font-size: 1.25em;
   margin-bottom: 3em;
 }
 
 .reset__btn {
   border: none;
   padding: 0.5em 1em;
-  font-size: 1em;
+  background-color: #4a81b9;
+  box-shadow: 1px 1px 5px 0px rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
+  transition: transform 0.25s;
   cursor: pointer;
-  background-color: #333;
 }
 
-.timer, .movecount {
-  font-size: 1.25em;
-  color: #333;
+.reset__btn:hover {
+  transform: scale(1.025);
 }
